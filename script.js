@@ -3,7 +3,7 @@
    KONFIGURASI SUPABASE
 ===================================== */
 
-const SUPABASE_URL = "dkxjzplmlhhfzgbjqhbt";
+const SUPABASE_URL = "https://dkxjzplmlhhfzgbjqhbt.supabase.co";
 const SUPABASE_KEY = "sb_publishable_a6SuErIdMXT7y3LG43RFXA_RAorKNYq";
 
 const db = window.supabase.createClient(
