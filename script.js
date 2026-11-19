@@ -3,8 +3,8 @@
    KONFIGURASI SUPABASE
 ===================================== */
 
-const SUPABASE_URL = "MASUKKAN_PROJECT_URL";
-const SUPABASE_KEY = "MASUKKAN_PUBLISHABLE_KEY";
+const SUPABASE_URL = "dkxjzplmlhhfzgbjqhbt";
+const SUPABASE_KEY = "sb_publishable_a6SuErIdMXT7y3LG43RFXA_RAorKNYq";
 
 const db = window.supabase.createClient(
   SUPABASE_URL,
