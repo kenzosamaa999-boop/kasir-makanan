@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kasir Makanan</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- HALAMAN LOGIN -->
+  <section id="halamanLogin" class="login-page">
+    <form id="formLogin" class="login-card">
+      <div class="logo">K<span>+</span></div>
+      <h1>Kasir Makanan</h1>
+      <p>Silakan login untuk masuk ke dashboard</p>
+
+      <label>Email Admin</label>
+      <input type="email" id="email" placeholder="Masukkan email" required>
+
+      <label>Password</label>
+      <input type="password" id="password" placeholder="Masukkan password" required>
+
+      <button type="submit" class="btn-primary">LOGIN</button>
+      <p id="pesanLogin" class="pesan"></p>
+    </form>
+  </section>
+
+  <!-- APLIKASI -->
+  <div id="aplikasi" class="app hidden">
+
+    <aside class="sidebar">
+      <div class="brand">KASIR<span>+</span></div>
+      <p class="sidebar-label">MENU UTAMA</p>
+
+      <button class="nav active" data-page="dashboard">▦ Dashboard</button>
+      <button class="nav" data-page="kasir">▣ Kasir</button>
+      <button class="nav" data-page="makanan">☷ Menu Makanan</button>
+      <button class="nav" data-page="riwayat">◷ Riwayat Transaksi</button>
+
+      <div class="sidebar-bottom">
+        <p>Kasir Makanan</p>
+        <button id="btnLogout" class="btn-logout">↪ Keluar</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <h2 id="judulHalaman">Dashboard</h2>
+          <p>Sistem Manajemen Kasir Makanan</p>
+        </div>
+        <div class="admin-info">
+          <span class="admin-avatar">A</span>
+          <span>Admin</span>
+        </div>
+      </header>
+
+      <!-- DASHBOARD -->
+      <section id="page-dashboard" class="page">
+        <div class="welcome">
+          <div>
+            <h2>Selamat Datang, Admin!</h2>
+            <p>Berikut ringkasan aktivitas kasir hari ini.</p>
+          </div>
+          <span class="welcome-icon">✦</span>
+        </div>
+
+        <div class="stats">
+          <div class="stat-card">
+            <span>Total Menu</span>
+            <strong id="statMenu">0</strong>
+            <small>Menu tersedia</small>
+          </div>
+          <div class="stat-card">
+            <span>Total Transaksi</span>
+            <strong id="statTransaksi">0</strong>
+            <small>Transaksi tersimpan</small>
+          </div>
+          <div class="stat-card">
+            <span>Total Pendapatan</span>
+            <strong id="statPendapatan">Rp 0</strong>
+            <small>Akumulasi penjualan</small>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Informasi Sistem</h3>
+          <p>Gunakan menu di samping untuk mengelola makanan, melayani pembelian, dan melihat riwayat transaksi.</p>
+        </div>
+      </section>
+
+      <!-- HALAMAN KASIR -->
+      <section id="page-kasir" class="page hidden">
+        <div class="section-heading">
+          <div>
+            <h3>Kasir Penjualan</h3>
+            <p>Pilih makanan dan masukkan ke keranjang.</p>
+          </div>
+        </div>
+
+        <div class="kasir-layout">
+          <div class="panel">
+            <input type="search" id="cariMenu" placeholder="Cari nama makanan...">
+            <div id="daftarMenu" class="menu-grid"></div>
+          </div>
+
+          <div class="panel keranjang-panel">
+            <h3>Keranjang Belanja</h3>
+            <div id="isiKeranjang">
+              <p class="empty">Belum ada makanan dipilih.</p>
+            </div>
+
+            <div class="total-box">
+              <span>Total Pembayaran</span>
+              <strong id="totalBayar">Rp 0</strong>
+            </div>
+
+            <button id="btnBayar" class="btn-primary">BAYAR SEKARANG</button>
+            <button id="btnKosongkan" class="btn-secondary">Kosongkan Keranjang</button>
+            <p id="pesanKasir" class="pesan"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- HALAMAN MENU MAKANAN -->
+      <section id="page-makanan" class="page hidden">
+        <div class="section-heading">
+          <div>
+            <h3>Kelola Menu Makanan</h3>
+            <p>Tambah, edit, dan hapus menu makanan.</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3 id="judulFormMakanan">Tambah Makanan</h3>
+          <form id="formMakanan" class="food-form">
+            <input type="hidden" id="idMakanan">
+
+            <div>
+              <label>Nama Makanan</label>
+              <input type="text" id="namaMakanan" placeholder="Contoh: Nasi Goreng" required>
+            </div>
+
+            <div>
+              <label>Harga (Rp)</label>
+              <input type="number" id="hargaMakanan" min="1" placeholder="15000" required>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-primary" id="btnSimpan">Simpan Menu</button>
+              <button type="button" class="btn-secondary hidden" id="btnBatal">Batal Edit</button>
+            </div>
+          </form>
+          <p id="pesanMakanan" class="pesan"></p>
+        </div>
+
+        <div class="panel">
+          <div class="table-heading">
+            <h3>Daftar Makanan</h3>
+            <input type="search" id="cariMakanan" placeholder="Cari makanan...">
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Nama Makanan</th>
+                  <th>Harga</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tabelMakanan"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIWAYAT TRANSAKSI -->
+      <section id="page-riwayat" class="page hidden">
+        <div class="section-heading">
+          <div>
+            <h3>Riwayat Transaksi</h3>
+            <p>Daftar seluruh transaksi penjualan.</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Tanggal</th>
+                  <th>Total</th>
+                  <th>Detail</th>
+                </tr>
+              </thead>
+              <tbody id="tabelRiwayat"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel hidden" id="detailRiwayat">
+          <h3>Detail Transaksi</h3>
+          <div id="isiDetailRiwayat"></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
