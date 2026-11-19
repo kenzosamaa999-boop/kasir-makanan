@@ -4,11 +4,12 @@
 ===================================== */
 
 const SUPABASE_URL = "https://dkxjzplmlhhfzgbjqhbt.supabase.co";
+
 const SUPABASE_KEY = "sb_publishable_a6SuErIdMXT7y3LG43RFXA_RAorKNYq";
 
 const db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
+    SUPABASE_URL,
+    SUPABASE_KEY
 );
 
 /* =====================================
